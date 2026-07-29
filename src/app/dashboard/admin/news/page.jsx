@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Newspaper, Calendar, X, Loader2, Image as ImageIcon, User, Clock, Tag, Check } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Newspaper, Calendar, X, Loader2, Image as ImageIcon, User, Clock, Tag, Check, Upload, CheckCircle2 } from 'lucide-react';
 import { getAllNews } from '@/lib/api/news';
 import { getAllCategory } from '@/lib/api/category';
 import { createCategory } from '@/lib/action/categories';
 import { createNews } from '@/lib/action/news';
-
 
 export default function NewsPage() {
     const [newsList, setNewsList] = useState([]);
@@ -14,6 +14,11 @@ export default function NewsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+
+    // Image Upload States
+    const [imageFile, setImageFile] = useState(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [imagePreview, setImagePreview] = useState('');
 
     // Dynamic Category States
     const [isAddingCategory, setIsAddingCategory] = useState(false);
@@ -61,6 +66,43 @@ export default function NewsPage() {
         fetchData();
     }, []);
 
+    // Handle Image Selection & Upload to ImgBB
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
+
+        // Directly upload to ImgBB
+        setUploadingImage(true);
+        const imgData = new FormData();
+        imgData.append('image', file);
+
+        try {
+            const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                method: 'POST',
+                body: imgData,
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                setFormData((prev) => ({ ...prev, thumbnail: data.data.url }));
+            } else {
+                alert('Image upload failed. Please try again.');
+                setImageFile(null);
+                setImagePreview('');
+            }
+        } catch (error) {
+            console.error('ImgBB Upload Error:', error);
+            alert('Something went wrong while uploading image.');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
     // Handle Dynamic Category Creation
     const handleAddCategory = async () => {
         if (!newCategoryName.trim()) return;
@@ -76,8 +118,6 @@ export default function NewsPage() {
                 setFormData((prev) => ({ ...prev, category: addedCategory.name }));
                 setNewCategoryName('');
                 setIsAddingCategory(false);
-            } else {
-                // alert(res?.message || 'Error adding category');
             }
         } catch (error) {
             console.error('Error adding category:', error);
@@ -89,6 +129,12 @@ export default function NewsPage() {
     // Handle News Form Submit
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!formData.thumbnail) {
+            alert('Please wait until the thumbnail finishes uploading or select a valid image.');
+            return;
+        }
+
         setSubmitting(true);
 
         try {
@@ -104,10 +150,10 @@ export default function NewsPage() {
                     introduction: '',
                     content: '',
                 });
+                setImageFile(null);
+                setImagePreview('');
                 setIsModalOpen(false);
-                fetchData(); // Refresh list after publishing
-            } else {
-                // alert(res?.message || 'Failed to publish news');
+                fetchData();
             }
         } catch (error) {
             console.error('Error creating news:', error);
@@ -154,9 +200,10 @@ export default function NewsPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {newsList.map((item) => (
-                        <div
+                        <Link
                             key={item._id}
-                            className="p-5 bg-[#141414] border border-[#262626] rounded-xl hover:border-yellow-400/40 transition flex flex-col justify-between space-y-4 group"
+                            href={`/dashboard/admin/news/${item._id}`}
+                            className="p-5 bg-[#141414] border border-[#262626] rounded-xl hover:border-yellow-400/50 transition flex flex-col justify-between space-y-4 group cursor-pointer"
                         >
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
@@ -192,7 +239,7 @@ export default function NewsPage() {
                                     })}
                                 </span>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
@@ -201,7 +248,6 @@ export default function NewsPage() {
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-[#141414] border border-[#262626] rounded-2xl max-w-2xl w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
-
                         <div className="flex items-center justify-between pb-4 border-b border-[#262626]">
                             <h2 className="text-lg font-bold text-white flex items-center gap-2">
                                 <Newspaper className="w-5 h-5 text-yellow-400" />
@@ -216,8 +262,6 @@ export default function NewsPage() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
-
-                            {/* Title */}
                             <div className="space-y-1.5">
                                 <label className="text-xs font-medium text-zinc-300">Article Title *</label>
                                 <input
@@ -230,14 +274,12 @@ export default function NewsPage() {
                                 />
                             </div>
 
-                            {/* Category Dropdown with Add Option */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
                                     <div className="flex justify-between items-center">
                                         <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
                                             <Tag className="w-3.5 h-3.5 text-zinc-500" /> Category
                                         </label>
-
                                         <button
                                             type="button"
                                             onClick={() => setIsAddingCategory(!isAddingCategory)}
@@ -280,7 +322,6 @@ export default function NewsPage() {
                                     )}
                                 </div>
 
-                                {/* Read Time */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
                                         <Clock className="w-3.5 h-3.5 text-zinc-500" /> Read Time
@@ -295,19 +336,38 @@ export default function NewsPage() {
                                 </div>
                             </div>
 
-                            {/* Thumbnail & Author */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* Direct Image File Upload System */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
-                                        <ImageIcon className="w-3.5 h-3.5 text-zinc-500" /> Thumbnail Image URL
+                                        <ImageIcon className="w-3.5 h-3.5 text-zinc-500" /> Upload Thumbnail *
                                     </label>
-                                    <input
-                                        type="url"
-                                        placeholder="https://example.com/image.jpg"
-                                        className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg py-2.5 px-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-400/60 transition"
-                                        value={formData.thumbnail}
-                                        onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
-                                    />
+                                    <div className="relative border border-dashed border-[#333] hover:border-yellow-400/50 rounded-lg p-3 bg-[#1a1a1a] text-center transition cursor-pointer">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        />
+                                        <div className="flex flex-col items-center justify-center gap-1 text-zinc-400">
+                                            {uploadingImage ? (
+                                                <div className="flex items-center gap-2 text-xs text-yellow-400">
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                    Uploading to ImgBB...
+                                                </div>
+                                            ) : formData.thumbnail ? (
+                                                <div className="flex items-center gap-1.5 text-xs text-green-400 font-medium">
+                                                    <CheckCircle2 className="w-4 h-4" />
+                                                    Uploaded Successfully!
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Upload className="w-5 h-5 text-zinc-500" />
+                                                    <span className="text-xs">Click or drag image to upload</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -324,7 +384,13 @@ export default function NewsPage() {
                                 </div>
                             </div>
 
-                            {/* Short Intro */}
+                            {/* Image Preview Area */}
+                            {imagePreview && (
+                                <div className="mt-2 relative w-full h-32 bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#262626]">
+                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                </div>
+                            )}
+
                             <div className="space-y-1.5">
                                 <label className="text-xs font-medium text-zinc-300">Short Introduction</label>
                                 <textarea
@@ -336,7 +402,6 @@ export default function NewsPage() {
                                 />
                             </div>
 
-                            {/* Content */}
                             <div className="space-y-1.5">
                                 <label className="text-xs font-medium text-zinc-300">Full Content / Article Body *</label>
                                 <textarea
@@ -349,7 +414,6 @@ export default function NewsPage() {
                                 />
                             </div>
 
-                            {/* Actions */}
                             <div className="flex justify-end gap-3 pt-3 border-t border-[#262626]">
                                 <button
                                     type="button"
@@ -361,20 +425,17 @@ export default function NewsPage() {
 
                                 <button
                                     type="submit"
-                                    disabled={submitting}
+                                    disabled={submitting || uploadingImage}
                                     className="px-5 py-2.5 text-xs font-semibold text-black bg-yellow-400 hover:bg-yellow-300 rounded-lg transition flex items-center gap-2 cursor-pointer disabled:opacity-60"
                                 >
                                     {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                                     Publish News
                                 </button>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             )}
-
         </div>
     );
 }
