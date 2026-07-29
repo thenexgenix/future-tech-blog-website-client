@@ -1,0 +1,242 @@
+import React from 'react';
+import Image from 'next/image';
+import { ArrowUpRight, Eye, Layers, FileText } from 'lucide-react';
+
+export default function ResourcesSection() {
+    const avatars = [
+        { name: 'User 1', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' },
+        { name: 'User 2', src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100' },
+        { name: 'User 3', src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100' },
+        { name: 'User 4', src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100' },
+    ];
+
+    return (
+        <section className="bg-[#0f0f0f] text-white min-h-screen py-12 px-4 sm:px-8 lg:px-16">
+            <div className="max-w-350 mx-auto">
+
+                <div className="flex flex-col md:flex-row md:items-end justify-between pb-10 border-b border-[#262626] gap-6">
+                    <div className="space-y-3 max-w-3xl">
+                        <span className="inline-block px-3.5 py-1.5 text-xs font-medium bg-[#1a1a1a] border border-[#262626] rounded-md text-zinc-400">
+                            Your Gateway to In-Depth Information
+                        </span>
+                        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-tight">
+                            Unlock Valuable Knowledge with FutureTech&apos;s Resources
+                        </h1>
+                    </div>
+                    <div>
+                        <a
+                            href="#"
+                            className="inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm font-medium bg-[#141414] border border-[#262626] rounded-lg hover:bg-[#1f1f1f] transition-all text-zinc-300 group whitespace-nowrap"
+                        >
+                            View All Resources
+                            <ArrowUpRight className="w-4 h-4 text-yellow-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                        </a>
+                    </div>
+                </div>
+
+                <div className="divide-y divide-[#262626]">
+
+                    {/* ---------------- 1. EBOOKS ROW ---------------- */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-12">
+
+                        {/* Left Column: Info & Action */}
+                        <div className="lg:col-span-4 flex flex-col justify-between space-y-8">
+                            <div className="space-y-5">
+                                <div className="w-12 h-12 flex items-center justify-center">
+                                    <Layers className="w-10 h-10 text-yellow-400" />
+                                </div>
+
+                                <h2 className="text-2xl font-semibold text-white">Ebooks</h2>
+                                <p className="text-zinc-400 text-sm leading-relaxed">
+                                    Explore our collection of ebooks covering a wide spectrum of future technology topics.
+                                </p>
+
+                                <a
+                                    href="#"
+                                    className="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-medium bg-[#141414] border border-[#262626] rounded-lg hover:bg-[#1f1f1f] transition-all text-zinc-300 group"
+                                >
+                                    Download Ebooks Now
+                                    <ArrowUpRight className="w-4 h-4 text-yellow-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                </a>
+                            </div>
+
+                            {/* Download Stats Pill */}
+                            <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs text-zinc-500">Downloaded By</p>
+                                    <p className="text-sm font-semibold text-white mt-0.5">10k + Users</p>
+                                </div>
+                                <div className="flex -space-x-2">
+                                    {avatars.map((user, idx) => (
+                                        <div key={idx} className="relative w-8 h-8 rounded-full border-2 border-[#141414] overflow-hidden">
+                                            <Image
+                                                src={user.src}
+                                                alt={user.name}
+                                                fill
+                                                sizes="32px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Detailed Cards & Visual */}
+                        <div className="lg:col-span-8 space-y-5">
+
+                            {/* Variety of Topics Banner */}
+                            <div className="p-4 sm:p-5 bg-[#141414] border border-[#262626] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span className="font-semibold text-sm text-white shrink-0">Variety of Topics</span>
+                                <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed sm:text-right max-w-xl">
+                                    Topics include AI in education (25%), renewable energy (20%), healthcare (15%), space exploration (25%), and biotechnology (15%).
+                                </p>
+                            </div>
+
+                            {/* Media Container */}
+                            <div className="relative h-60 sm:h-72 w-full rounded-xl overflow-hidden border border-[#262626]">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+                                    alt="Ebooks Topics Visual"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 800px"
+                                    className="object-cover"
+                                    priority
+                                />
+                            </div>
+
+                            {/* Key Stats Row */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
+                                    <p className="text-xs text-zinc-500">Total Ebooks</p>
+                                    <p className="text-sm font-semibold text-white mt-1">Over 100 ebooks</p>
+                                </div>
+
+                                <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs text-zinc-500">Download Formats</p>
+                                        <p className="text-sm font-medium text-white mt-1">PDF format for access.</p>
+                                    </div>
+                                    <button className="px-3 py-1.5 text-xs font-medium bg-[#1a1a1a] border border-[#262626] rounded-md hover:bg-[#262626] text-zinc-300 flex items-center gap-1.5 transition">
+                                        Preview
+                                        <Eye className="w-3.5 h-3.5 text-yellow-400" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Author Expertise */}
+                            <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
+                                <p className="text-xs text-zinc-500">Average Author Expertise</p>
+                                <p className="text-xs sm:text-sm text-zinc-300 mt-1">
+                                    Ebooks are authored by renowned experts with an average of <span className="text-white font-semibold">15 years of experience</span>.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {/* ---------------- 2. WHITEPAPERS ROW ---------------- */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-12">
+
+                        {/* Left Column: Info & Action */}
+                        <div className="lg:col-span-4 flex flex-col justify-between space-y-8">
+                            <div className="space-y-5">
+                                <div className="w-12 h-12 flex items-center justify-center">
+                                    <FileText className="w-10 h-10 text-yellow-400" />
+                                </div>
+
+                                <h2 className="text-2xl font-semibold text-white">Whitepapers</h2>
+                                <p className="text-zinc-400 text-sm leading-relaxed">
+                                    Dive into comprehensive reports and analyses with our collection of whitepapers.
+                                </p>
+
+                                <a
+                                    href="#"
+                                    className="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-medium bg-[#141414] border border-[#262626] rounded-lg hover:bg-[#1f1f1f] transition-all text-zinc-300 group"
+                                >
+                                    Download Whitepapers Now
+                                    <ArrowUpRight className="w-4 h-4 text-yellow-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                </a>
+                            </div>
+
+                            {/* Download Stats Pill */}
+                            <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs text-zinc-500">Downloaded By</p>
+                                    <p className="text-sm font-semibold text-white mt-0.5">10k + Users</p>
+                                </div>
+                                <div className="flex -space-x-2">
+                                    {avatars.map((user, idx) => (
+                                        <div key={idx} className="relative w-8 h-8 rounded-full border-2 border-[#141414] overflow-hidden">
+                                            <Image
+                                                src={user.src}
+                                                alt={user.name}
+                                                fill
+                                                sizes="32px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Detailed Cards & Visual */}
+                        <div className="lg:col-span-8 space-y-5">
+
+                            {/* Topics Coverage Banner */}
+                            <div className="p-4 sm:p-5 bg-[#141414] border border-[#262626] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span className="font-semibold text-sm text-white shrink-0">Topics Coverage</span>
+                                <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed sm:text-right max-w-xl">
+                                    Whitepapers cover quantum computing (20%), AI ethics (15%), space mining prospects (20%), AI in healthcare (15%), and renewable energy strategies (30%).
+                                </p>
+                            </div>
+
+                            {/* Media Container */}
+                            <div className="relative h-60 sm:h-72 w-full rounded-xl overflow-hidden border border-[#262626]">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
+                                    alt="Whitepapers Visual"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 800px"
+                                    className="object-cover"
+                                />
+                            </div>
+
+                            {/* Key Stats Row */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
+                                    <p className="text-xs text-zinc-500">Total Whitepapers</p>
+                                    <p className="text-sm font-semibold text-white mt-1">Over 50 whitepapers</p>
+                                </div>
+
+                                <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs text-zinc-500">Download Formats</p>
+                                        <p className="text-sm font-medium text-white mt-1">PDF format for access.</p>
+                                    </div>
+                                    <button className="px-3 py-1.5 text-xs font-medium bg-[#1a1a1a] border border-[#262626] rounded-md hover:bg-[#262626] text-zinc-300 flex items-center gap-1.5 transition">
+                                        Preview
+                                        <Eye className="w-3.5 h-3.5 text-yellow-400" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Author Expertise */}
+                            <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
+                                <p className="text-xs text-zinc-500">Average Author Expertise</p>
+                                <p className="text-xs sm:text-sm text-zinc-300 mt-1">
+                                    Whitepapers are authored by subject matter experts with an average of <span className="text-white font-semibold">20 years of experience</span>.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    );
+}
