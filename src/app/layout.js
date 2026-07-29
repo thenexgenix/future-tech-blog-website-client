@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${kumbhSans.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         <Navbar/>
         <main>
           {children}
