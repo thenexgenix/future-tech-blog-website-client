@@ -1,15 +1,27 @@
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+'use client';
 
+import React, { useState } from 'react';
+import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 
 export default function DashboardLayout({ children }) {
+    // Mobile Sidebar Toggle State
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
-        <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col md:flex-row font-sans">
+        <div className="min-h-screen bg-[#0d0d0d] text-zinc-100 flex flex-col">
 
-            <DashboardSidebar />
+            <DashboardNavbar onMenuClick={() => setIsSidebarOpen(true)} />
 
-            <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-                {children}
-            </main>
+            <div className="flex flex-1">
+                <DashboardSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+                {/* Main Content Area */}
+                <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+                    {children}
+                </main>
+            </div>
+
         </div>
     );
 }

@@ -6,8 +6,14 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@heroui/react';
 
 export default function Navbar() {
+
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+
+    if(pathname.startsWith('/dashboard')){
+        return null;
+    }
 
     const navLinks = [
         { name: 'Home', href: '/' },

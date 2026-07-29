@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -9,14 +9,12 @@ import {
     FolderKanban,
     BookOpen,
     LogOut,
-    Menu,
-    X,
-    ShieldAlert
+    ShieldAlert,
+    X
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 
-export default function DashboardSidebar() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function DashboardSidebar({ isOpen, onClose }) {
     const pathname = usePathname();
 
     const navItems = [
@@ -33,48 +31,44 @@ export default function DashboardSidebar() {
 
     return (
         <>
-
-            <div className="md:hidden flex items-center justify-between p-4 bg-[#141414] border-b border-[#262626] sticky top-0 z-50">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center">
-                        <ShieldAlert className="w-4 h-4 text-yellow-400" />
-                    </div>
-                    <span className="font-bold text-sm tracking-wide text-white">Admin Panel</span>
-                </div>
-                <button
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="p-2 text-zinc-400 hover:text-white rounded-lg bg-[#1a1a1a] border border-[#262626]"
-                >
-                    {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </button>
-            </div>
-
-            {sidebarOpen && (
+            {/* Backdrop for Mobile */}
+            {isOpen && (
                 <div
-                    onClick={() => setSidebarOpen(false)}
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+                    onClick={onClose}
+                    className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden"
                 />
             )}
 
+            {/* Sidebar Container */}
             <aside
-                className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#141414] border-r border-[#262626] flex flex-col justify-between p-4 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+                className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#141414] border-r border-[#262626] flex flex-col justify-between p-4 transition-transform duration-300 ease-in-out shrink-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
                     }`}
             >
                 {/* Top Section */}
                 <div className="space-y-6">
 
-                    {/* Logo / Title */}
-                    <div className="hidden md:flex items-center gap-3 px-2 pt-2">
-                        <div className="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center shrink-0">
-                            <ShieldAlert className="w-5 h-5 text-yellow-400" />
+                    {/* Header Logo */}
+                    <div className="flex items-center justify-between px-2 pt-2">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center shrink-0">
+                                <ShieldAlert className="w-5 h-5 text-yellow-400" />
+                            </div>
+                            <div>
+                                <h2 className="font-bold text-sm text-white leading-none">FutureTech</h2>
+                                <span className="text-[10px] text-zinc-500 font-medium">Admin Control</span>
+                            </div>
                         </div>
-                        <div>
-                            <h2 className="font-bold text-sm text-white leading-none">FutureTech</h2>
-                            <span className="text-[10px] text-zinc-500 font-medium">Admin Control</span>
-                        </div>
+
+                        {/* Mobile Close Button */}
+                        <button
+                            onClick={onClose}
+                            className="md:hidden p-1.5 text-zinc-400 hover:text-white rounded-lg bg-[#1a1a1a] border border-[#262626]"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
                     </div>
 
-                    <div className="border-t border-[#262626] hidden md:block" />
+                    <div className="border-t border-[#262626]" />
 
                     {/* Navigation Links */}
                     <nav className="space-y-1">
@@ -86,7 +80,7 @@ export default function DashboardSidebar() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    onClick={() => setSidebarOpen(false)}
+                                    onClick={onClose}
                                     className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${isActive
                                             ? 'bg-yellow-400 text-black font-semibold shadow-md shadow-yellow-400/10'
                                             : 'text-zinc-400 hover:text-white hover:bg-[#1a1a1a]'
@@ -110,7 +104,6 @@ export default function DashboardSidebar() {
                         Sign Out
                     </button>
                 </div>
-
             </aside>
         </>
     );
