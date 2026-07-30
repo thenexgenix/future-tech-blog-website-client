@@ -9,5 +9,5 @@ export const updateResources = async (id, formData) => {
 }
 
 export const deleteResources = async (id) => {
-    return serverMutation(`/api/resources/${id}`, {}, 'PUT')
+    return serverMutation(`/api/resources/${id}`, {}, 'DELETE')
 }

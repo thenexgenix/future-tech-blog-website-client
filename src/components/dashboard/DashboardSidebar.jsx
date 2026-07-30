@@ -21,7 +21,7 @@ export default function DashboardSidebar({ isOpen, onClose }) {
         { name: 'Dashboard', href: '/dashboard/admin', icon: LayoutDashboard },
         { name: 'News', href: '/dashboard/admin/news', icon: Newspaper },
         { name: 'Resources', href: '/dashboard/admin/resources', icon: FolderKanban },
-        { name: 'Blogs', href: '/dashboard/admin/blogs', icon: BookOpen },
+        { name: 'Podcasts', href: '/dashboard/admin/podcast', icon: BookOpen },
     ];
 
     const handleSignOut = async () => {

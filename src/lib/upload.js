@@ -1,5 +1,3 @@
-// lib/upload.js
-
 export const uploadFileToCloudinary = async (file, resourceType = 'auto') => {
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -8,7 +6,7 @@ export const uploadFileToCloudinary = async (file, resourceType = 'auto') => {
         throw new Error('Cloudinary env variables are missing');
     }
 
-    const MAX_SIZE_BYTES = 10 * 1024 * 1024;
+    const MAX_SIZE_BYTES = 1024 * 1024 * 1024;
     if (file.size > MAX_SIZE_BYTES) {
         throw new Error(`File Size is too large! Max 10 MB will be uploaded.`);
     }
@@ -30,7 +28,6 @@ export const uploadFileToCloudinary = async (file, resourceType = 'auto') => {
 
     let finalUrl = data.secure_url;
 
-    // যদি এটি RAW টাইপের PDF হয় এবং লিংকের শেষে .pdf না থাকে, তবে .pdf যুক্ত করে দেওয়া
     if (resourceType === 'raw' && file.name.endsWith('.pdf') && !finalUrl.endsWith('.pdf')) {
         finalUrl += '.pdf';
     }
