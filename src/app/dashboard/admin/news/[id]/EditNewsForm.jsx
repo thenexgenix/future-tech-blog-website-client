@@ -119,14 +119,14 @@ export default function EditNewsForm({ id, initialData, categories }) {
                 setTimeout(() => setSuccessMsg(''), 3000);
             }
         } catch (error) {
-            console.error('Error updating news:', error);
+            // console.error('Error updating news:', error);
         } finally {
             setSaving(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-5xl mx-auto pb-12">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-350 mx-auto pb-12">
             {successMsg && (
                 <div className="flex items-center gap-2 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium rounded-xl transition animate-in fade-in duration-200">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
