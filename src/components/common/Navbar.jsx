@@ -7,11 +7,10 @@ import { Button } from '@heroui/react';
 
 export default function Navbar() {
 
-
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
-    if(pathname.startsWith('/dashboard')){
+    if (pathname.startsWith('/dashboard')) {
         return null;
     }
 
@@ -24,12 +23,11 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-50 w-full bg-[#141414] border-b border-[#262626]">
-            <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
 
                     {/* Logo Section */}
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        {/* Custom FutureTech Yellow Icon */}
                         <div className="w-8 h-8 flex items-center justify-center">
                             <svg
                                 viewBox="0 0 24 24"
@@ -55,8 +53,8 @@ export default function Navbar() {
                                     key={link.name}
                                     href={link.href}
                                     className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
-                                            ? 'bg-[#141414] text-white border border-[#262626] shadow-sm'
-                                            : 'text-gray-400 hover:text-white hover:bg-[#202020]'
+                                        ? 'bg-[#141414] text-white border border-[#262626] shadow-sm'
+                                        : 'text-gray-400 hover:text-white hover:bg-[#202020]'
                                         }`}
                                 >
                                     {link.name}
@@ -65,15 +63,15 @@ export default function Navbar() {
                         })}
                     </nav>
 
-                    {/* Contact Us CTA Button */}
+                    {/* Desktop Contact Us CTA Button - FIXED */}
                     <div className="hidden md:flex items-center">
-                        <Button
-                            as={Link}
-                            href="/contact"
-                            className="bg-[#FFD100] text-black font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-[#e6bd00] transition-colors duration-200"
-                        >
-                            Contact Us
-                        </Button>
+                        <Link href="/contact">
+                            <Button
+                                className="bg-[#FFD100] text-black font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-[#e6bd00] transition-colors duration-200 cursor-pointer"
+                            >
+                                Contact Us
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -109,8 +107,8 @@ export default function Navbar() {
                                     href={link.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={`px-4 py-3 rounded-lg text-base font-medium ${isActive
-                                            ? 'bg-[#1A1A1A] text-white border border-[#262626]'
-                                            : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
+                                        ? 'bg-[#1A1A1A] text-white border border-[#262626]'
+                                        : 'text-gray-400 hover:text-white hover:bg-[#1A1A1A]'
                                         }`}
                                 >
                                     {link.name}
@@ -118,15 +116,15 @@ export default function Navbar() {
                             );
                         })}
                     </div>
+                    
                     <div className="pt-2">
-                        <Button
-                            as={Link}
-                            href="/contact"
+                        <Link
+                            href="/contact-us"
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="w-full bg-[#FFD100] text-black font-semibold text-center py-3 rounded-xl hover:bg-[#e6bd00]"
+                            className="block w-full bg-[#FFD100] text-black font-semibold text-center py-3 rounded-xl hover:bg-[#e6bd00] transition-colors"
                         >
                             Contact Us
-                        </Button>
+                        </Link>
                     </div>
                 </div>
             )}

@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Newspaper, Calendar, X, Loader2, Image as ImageIcon, User, Clock, Tag, Check, Upload, CheckCircle2 } from 'lucide-react';
+import { Plus, Newspaper, Calendar, X, Loader2, Image as ImageIcon, User, Clock, Tag, Check, Upload, CheckCircle2, Trash2, AlertTriangle } from 'lucide-react';
 import { getAllNews } from '@/lib/api/news';
 import { getAllCategory } from '@/lib/api/category';
 import { createCategory } from '@/lib/action/categories';
-import { createNews } from '@/lib/action/news';
+import { createNews, deleteNews } from '@/lib/action/news';
 
 export default function NewsPage() {
     const [newsList, setNewsList] = useState([]);
@@ -14,6 +14,10 @@ export default function NewsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+
+    // Delete Modal & Action States
+    const [selectedNewsToDelete, setSelectedNewsToDelete] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
 
     // Image Upload States
     const [imageFile, setImageFile] = useState(null);
@@ -66,6 +70,35 @@ export default function NewsPage() {
         fetchData();
     }, []);
 
+    // Open Delete Modal Handler
+    const openDeleteModal = (e, item) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setSelectedNewsToDelete(item);
+    };
+
+    // Confirm Delete Action
+    const handleConfirmDelete = async () => {
+        if (!selectedNewsToDelete) return;
+
+        const id = selectedNewsToDelete._id;
+        try {
+            setDeletingId(id);
+            const res = await deleteNews(id);
+
+            if (res?.success || res?.ok || res?.deletedCount > 0) {
+                setNewsList((prev) => prev.filter((item) => item._id !== id));
+            } else {
+                console.error('Failed to delete news:', res?.message);
+            }
+        } catch (error) {
+            console.error('Error deleting news:', error);
+        } finally {
+            setDeletingId(null);
+            setSelectedNewsToDelete(null);
+        }
+    };
+
     // Handle Image Selection & Upload to ImgBB
     const handleImageChange = async (e) => {
         const file = e.target.files[0];
@@ -74,7 +107,6 @@ export default function NewsPage() {
         setImageFile(file);
         setImagePreview(URL.createObjectURL(file));
 
-        // Directly upload to ImgBB
         setUploadingImage(true);
         const imgData = new FormData();
         imgData.append('image', file);
@@ -91,13 +123,11 @@ export default function NewsPage() {
             if (data.success) {
                 setFormData((prev) => ({ ...prev, thumbnail: data.data.url }));
             } else {
-                alert('Image upload failed. Please try again.');
                 setImageFile(null);
                 setImagePreview('');
             }
         } catch (error) {
             console.error('ImgBB Upload Error:', error);
-            alert('Something went wrong while uploading image.');
         } finally {
             setUploadingImage(false);
         }
@@ -130,10 +160,7 @@ export default function NewsPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.thumbnail) {
-            alert('Please wait until the thumbnail finishes uploading or select a valid image.');
-            return;
-        }
+        if (!formData.thumbnail) return;
 
         setSubmitting(true);
 
@@ -163,7 +190,7 @@ export default function NewsPage() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-screen pb-5 md:p-12">
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#262626] pb-5">
                 <div>
@@ -203,10 +230,10 @@ export default function NewsPage() {
                         <Link
                             key={item._id}
                             href={`/dashboard/admin/news/${item._id}`}
-                            className="p-5 bg-[#141414] border border-[#262626] rounded-xl hover:border-yellow-400/50 transition flex flex-col justify-between space-y-4 group cursor-pointer"
+                            className="relative p-5 bg-[#141414] border border-[#262626] rounded-xl hover:border-yellow-400/50 transition flex flex-col justify-between space-y-4 group cursor-pointer"
                         >
                             <div className="space-y-3">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between pr-8">
                                     <span className="px-2.5 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400 text-[10px] font-semibold uppercase tracking-wider border border-yellow-400/20">
                                         {item.category}
                                     </span>
@@ -216,7 +243,16 @@ export default function NewsPage() {
                                     </span>
                                 </div>
 
-                                <h3 className="text-sm font-semibold text-white group-hover:text-yellow-400 transition leading-snug line-clamp-2">
+                                {/* DELETE ICON - TOP RIGHT CORNER */}
+                                <button
+                                    onClick={(e) => openDeleteModal(e, item)}
+                                    title="Delete News"
+                                    className="absolute top-4 right-4 p-1.5 rounded-lg bg-[#1a1a1a] border border-[#262626] text-zinc-400 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/10 transition z-10 cursor-pointer"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+
+                                <h3 className="text-sm font-semibold text-white group-hover:text-yellow-400 transition leading-snug line-clamp-2 pr-2">
                                     {item.title}
                                 </h3>
 
@@ -228,7 +264,7 @@ export default function NewsPage() {
                             <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-3 border-t border-[#1e1e1e]">
                                 <span className="flex items-center gap-1 font-medium text-zinc-400">
                                     <User className="w-3.5 h-3.5 text-zinc-500" />
-                                    {item.author?.name || 'Admin'}
+                                    {item.author?.name || item.authorName || 'Admin'}
                                 </span>
                                 <span className="flex items-center gap-1">
                                     <Calendar className="w-3.5 h-3.5 text-zinc-500" />
@@ -241,6 +277,53 @@ export default function NewsPage() {
                             </div>
                         </Link>
                     ))}
+                </div>
+            )}
+
+            {/* DELETE CONFIRMATION MODAL */}
+            {selectedNewsToDelete && (
+                <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-[#141414] border border-[#262626] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+                        <div className="flex items-center gap-3 text-red-400">
+                            <div className="p-2.5 bg-red-500/10 rounded-xl border border-red-500/20">
+                                <AlertTriangle className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-white">Delete News Article</h3>
+                                <p className="text-xs text-zinc-400">This action cannot be undone.</p>
+                            </div>
+                        </div>
+
+                        <p className="text-xs text-zinc-300 leading-relaxed bg-[#1a1a1a] p-3 rounded-xl border border-[#262626]">
+                            Are you sure you want to delete <span className="text-white font-semibold">{selectedNewsToDelete.title}</span>?
+                        </p>
+
+                        <div className="flex justify-end gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setSelectedNewsToDelete(null)}
+                                disabled={deletingId !== null}
+                                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white bg-[#1a1a1a] border border-[#262626] rounded-xl transition cursor-pointer disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleConfirmDelete}
+                                disabled={deletingId !== null}
+                                className="px-4 py-2 text-xs font-semibold text-white bg-red-600 hover:bg-red-500 rounded-xl transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                            >
+                                {deletingId ? (
+                                    <>
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    'Delete Article'
+                                )}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
 

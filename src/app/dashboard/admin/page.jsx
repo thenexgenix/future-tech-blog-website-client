@@ -28,7 +28,7 @@ export default async function DashboardAnalyticsPage() {
     const recentResources = resourcesList.slice(0, 4);
 
     return (
-        <div className="space-y-10 p-6 md:p-8 max-w-350 mx-auto bg-[#0F0F11] text-gray-100 min-h-screen">
+        <div className="space-y-10 p-6 md:p-8 max-w-350 mx-auto  text-gray-100 min-h-screen">
 
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">

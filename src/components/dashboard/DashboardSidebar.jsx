@@ -10,7 +10,9 @@ import {
     BookOpen,
     LogOut,
     ShieldAlert,
-    X
+    X,
+    Contact,
+    MessageCircleCheck
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 
@@ -22,6 +24,7 @@ export default function DashboardSidebar({ isOpen, onClose }) {
         { name: 'News', href: '/dashboard/admin/news', icon: Newspaper },
         { name: 'Resources', href: '/dashboard/admin/resources', icon: FolderKanban },
         { name: 'Podcasts', href: '/dashboard/admin/podcast', icon: BookOpen },
+        { name: 'Messages', href: '/dashboard/admin/contact', icon: MessageCircleCheck },
     ];
 
     const handleSignOut = async () => {
@@ -31,21 +34,21 @@ export default function DashboardSidebar({ isOpen, onClose }) {
 
     return (
         <>
-            {/* Backdrop for Mobile */}
+            {/* Backdrop for Mobile - Simple black overlay without blur */}
             {isOpen && (
                 <div
                     onClick={onClose}
-                    className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden"
+                    className="fixed inset-0 bg-black/70 z-40 md:hidden"
                 />
             )}
 
             {/* Sidebar Container */}
             <aside
-                className={`fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#141414] border-r border-[#262626] flex flex-col justify-between p-4 transition-transform duration-300 ease-in-out shrink-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+                className={`fixed md:sticky top-0 md:top-[65px] left-0 z-50 h-screen md:h-[calc(100vh-65px)] w-64 bg-[#141414] border-r border-[#262626] flex flex-col justify-between p-4 transition-transform duration-300 ease-in-out shrink-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
                     }`}
             >
                 {/* Top Section */}
-                <div className="space-y-6">
+                <div className="space-y-6 overflow-y-auto">
 
                     {/* Header Logo */}
                     <div className="flex items-center justify-between px-2 pt-2">
@@ -95,7 +98,7 @@ export default function DashboardSidebar({ isOpen, onClose }) {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="space-y-3 pt-4 border-t border-[#262626]">
+                <div className="space-y-3 pt-4 border-t border-[#262626] shrink-0 bg-[#141414]">
                     <button
                         onClick={handleSignOut}
                         className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all cursor-pointer"

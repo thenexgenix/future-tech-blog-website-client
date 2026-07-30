@@ -4,6 +4,7 @@ import CreatePodcastModal from './CreatePodcastModal';
 import Link from 'next/link';
 import { getAllPodcasts } from '@/lib/api/podcasts';
 import { deletePodcast } from '@/lib/action/podcasts';
+import { Plus } from 'lucide-react';
 
 const PodcastList = () => {
     const [podcasts, setPodcasts] = useState([]);
@@ -33,8 +34,8 @@ const PodcastList = () => {
 
     // Open Delete Modal
     const openDeleteModal = (e, id) => {
-        e.preventDefault();   
-        e.stopPropagation();  
+        e.preventDefault();
+        e.stopPropagation();
         setSelectedDeleteId(id);
     };
 
@@ -61,18 +62,20 @@ const PodcastList = () => {
     }, []);
 
     return (
-        <div className="bg-[#0F0F11] text-white min-h-screen p-6 md:p-12">
+        <div className=" text-white min-h-screen pb-5 md:p-12">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-800 pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#262626]">
                 <div>
                     <h1 className="text-3xl font-bold tracking-wide">Podcasts</h1>
                     <p className="text-gray-400 text-sm mt-1">Explore our latest insights and tech audio sessions.</p>
                 </div>
+
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-5 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition duration-200"
                 >
-                    <span>+</span> Create Podcast
+                    <Plus className="w-4 h-4 stroke-[2.5]" />
+                    <span>Create Podcasts</span>
                 </button>
             </div>
 

@@ -2,8 +2,15 @@
 
 import React from 'react';
 import { Menu, Bell, Search, User } from 'lucide-react';
+import { useSession } from '@/lib/auth-client';
 
 export default function DashboardNavbar({ onMenuClick }) {
+
+    const {data: session} = useSession();
+    
+    const user = session?.user;
+    // console.log(user);
+
     return (
         <header className="sticky top-0 z-30 w-full bg-[#141414] border-b border-[#262626] px-4 py-3 sm:px-6">
             <div className="flex items-center justify-between gap-4">
@@ -32,20 +39,15 @@ export default function DashboardNavbar({ onMenuClick }) {
 
                 {/* Right Section: Notifications & User Profile */}
                 <div className="flex items-center gap-3">
-                    {/* Notification Button */}
-                    <button className="p-2 rounded-xl text-zinc-400 hover:text-white bg-[#1a1a1a] border border-[#262626] hover:border-yellow-400/40 transition relative cursor-pointer">
-                        <Bell className="w-4 h-4 text-zinc-300" />
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-yellow-400 rounded-full"></span>
-                    </button>
-
+                    
                     {/* User Profile Tag */}
                     <div className="flex items-center gap-2.5 pl-3 border-l border-[#262626]">
                         <div className="w-8 h-8 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center text-yellow-400 font-semibold text-xs">
                             <User className="w-4 h-4" />
                         </div>
                         <div className="hidden md:block text-left">
-                            <p className="text-xs font-semibold text-white leading-none">Admin User</p>
-                            <p className="text-[10px] text-zinc-500 mt-1 leading-none">admin@futuretech.com</p>
+                            <p className="text-xs font-semibold text-white leading-none">{user?.name}</p>
+                            <p className="text-[10px] text-zinc-500 mt-1 leading-none">{user?.email}</p>
                         </div>
                     </div>
                 </div>
