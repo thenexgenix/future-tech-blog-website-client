@@ -4,8 +4,6 @@ import { Download, Calendar, User, ArrowUpRight, FileText } from 'lucide-react';
 import { getAllResources } from '@/lib/api/resources';
 
 
-export const revalidate = 60; 
-
 export default async function ResourcesPage() {
     let resources = [];
 

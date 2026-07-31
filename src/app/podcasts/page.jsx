@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { Play, Star, Clock, Radio, User, Calendar } from 'lucide-react';
 import { getAllPodcasts } from '@/lib/api/podcasts';
 
-export const revalidate = 60; 
-
 export default async function PodcastPage() {
     let podcasts = [];
 
