@@ -1,6 +1,8 @@
 import { Kumbh_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
+import FutureTechSection from "@/components/home/FutureTechSection";
 
 const kumbhSans = Kumbh_Sans({
   variable: "--font-kumbh-sans",
@@ -25,6 +27,8 @@ export default function RootLayout({ children }) {
         <main>
           {children}
         </main>
+        <FutureTechSection/>
+        <Footer/>
       </body>
     </html>
   );
