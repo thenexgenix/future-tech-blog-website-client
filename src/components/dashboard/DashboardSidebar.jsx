@@ -15,6 +15,7 @@ import {
     MessageCircleCheck
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
+import { ImProfile } from 'react-icons/im';
 
 export default function DashboardSidebar({ isOpen, onClose }) {
     const pathname = usePathname();
@@ -25,11 +26,12 @@ export default function DashboardSidebar({ isOpen, onClose }) {
         { name: 'Resources', href: '/dashboard/admin/resources', icon: FolderKanban },
         { name: 'Podcasts', href: '/dashboard/admin/podcast', icon: BookOpen },
         { name: 'Messages', href: '/dashboard/admin/contact', icon: MessageCircleCheck },
+        { name: 'Profile', href: '/dashboard/admin/profile', icon: ImProfile },
     ];
 
     const handleSignOut = async () => {
         await authClient.signOut();
-        window.location.href = '/login';
+        window.location.href = '/dashboard';
     };
 
     return (

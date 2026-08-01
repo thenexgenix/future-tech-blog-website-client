@@ -47,7 +47,7 @@ const CreatePodcastModal = ({ isOpen, onClose, refreshData }) => {
             const response = await createPodcasts(payload);
 
             if (response?.success || response) {
-                alert('Podcast created successfully!');
+                // alert('Podcast created successfully!');
                 refreshData();
                 onClose();
             }

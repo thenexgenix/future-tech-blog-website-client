@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Play, Star, Clock, Radio, User, Calendar } from 'lucide-react';
 import { getAllPodcasts } from '@/lib/api/podcasts';
 
+export const dynamic = 'force-dynamic'
+
 export default async function PodcastPage() {
     let podcasts = [];
 
@@ -15,7 +17,7 @@ export default async function PodcastPage() {
     }
 
     const featuredPodcast = podcasts.length > 0 ? podcasts[0] : null;
-    const remainingPodcasts = podcasts.length > 2 ? podcasts.slice(2) : [];
+    const remainingPodcasts = podcasts.length > 1 ? podcasts.slice(1) : [];
 
     return (
         <div className="min-h-screen bg-[#0d0d0d] text-zinc-100 py-10 px-4 sm:px-6 lg:px-12">

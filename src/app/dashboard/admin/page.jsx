@@ -1,10 +1,23 @@
-import React from 'react';
 import Link from 'next/link';
 import { getAllNews } from '@/lib/api/news';
 import { getAllPodcasts } from '@/lib/api/podcasts';
 import { getAllResources } from '@/lib/api/resources';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardAnalyticsPage() {
+
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    
+    const user = session?.user;
+    // console.log(user);
+
+    if(user?.role !== 'admin'){
+        redirect('/unauthorized')
+    }
     
     const [newsRes, podcastsRes, resourcesRes] = await Promise.all([
         getAllNews().catch(() => ({ data: [] })),

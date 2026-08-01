@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Download, Calendar, User, ArrowUpRight, FileText } from 'lucide-react';
 import { getAllResources } from '@/lib/api/resources';
 
+export const dynamic = 'force-dynamic' 
 
 export default async function ResourcesPage() {
     let resources = [];
@@ -15,8 +16,8 @@ export default async function ResourcesPage() {
         console.error('Failed to fetch resources:', error);
     }
 
-    const featuredResources = resources.length > 0 ? resources.slice(0, 2) : [];
-    const remainingResources = resources.length > 2 ? resources.slice(2) : [];
+    const featuredResources = resources.length > 0 ? resources.slice(0, 1) : [];
+    const remainingResources = resources.length > 1 ? resources.slice(1) : [];
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
