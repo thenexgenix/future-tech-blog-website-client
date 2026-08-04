@@ -6,7 +6,6 @@ import { Heart, Send, ArrowUpRight, Loader2, Newspaper } from 'lucide-react';
 import { getAllNews } from '@/lib/api/news';
 import { Separator } from '@heroui/react';
 
-// Pure Date Formatter Helper
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);

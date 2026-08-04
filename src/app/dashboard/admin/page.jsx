@@ -11,34 +11,27 @@ export default async function DashboardAnalyticsPage() {
     const session = await auth.api.getSession({
         headers: await headers()
     });
-    
-    const user = session?.user;
-    // console.log(user);
 
-    if(user?.role !== 'admin'){
+    const user = session?.user;
+
+    if (user?.role !== 'admin') {
         redirect('/unauthorized')
     }
-    
-    const [newsRes, podcastsRes, resourcesRes] = await Promise.all([
-        getAllNews().catch(() => ({ data: [] })),
-        getAllPodcasts().catch(() => ({ data: [] })),
-        getAllResources().catch(() => ({ data: [] })),
-    ]);
 
-    // Data Extraction (Handling response formats)
-    const newsList = newsRes?.data || newsRes || [];
-    const podcastsList = podcastsRes?.data || podcastsRes || [];
-    const resourcesList = resourcesRes?.data || resourcesRes || [];
+    const news = await getAllNews();
+    const podcasts = await getAllPodcasts();
+    const resources = await getAllResources();
+    // console.log('news', news);
+    // console.log('podcast', podcasts.data);
+    // console.log('resources', resources.data);
 
-    // Total Stats Count
-    const totalNews = newsList.length;
-    const totalPodcasts = podcastsList.length;
-    const totalResources = resourcesList.length;
+    const totalNews = news.length;
+    const totalPodcasts = podcasts?.data.length;
+    const totalResources = resources?.data.length;
 
-    // Slice Recent 4 items for each section
-    const recentNews = newsList.slice(0, 4);
-    const recentPodcasts = podcastsList.slice(0, 4);
-    const recentResources = resourcesList.slice(0, 4);
+    const recentNews = news.slice(0, 4);
+    const recentPodcasts = podcasts?.data.slice(0, 4);
+    const recentResources = resources?.data.slice(0, 4);
 
     return (
         <div className="space-y-10 p-6 md:p-8 max-w-350 mx-auto  text-gray-100 min-h-screen">

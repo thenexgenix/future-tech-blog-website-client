@@ -13,7 +13,7 @@ export const authHeader = async () => {
 
 export const serverFetch = async (path) => {
     const res = await fetch(`${baseUrl}${path}`, {
-        cache: 'no-store',
+        cache: 'force-cache',
     });
 
     return res.json();
