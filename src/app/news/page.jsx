@@ -1,6 +1,4 @@
-'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Heart, Send, ArrowUpRight, Loader2, Newspaper } from 'lucide-react';
 import { getAllNews } from '@/lib/api/news';
@@ -18,37 +16,11 @@ const formatDate = (dateString) => {
     });
 };
 
-export default function UserNewsPage() {
-    const [newsList, setNewsList] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default async function UserNewsPage() {
 
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                setLoading(true);
-                const res = await getAllNews();
-                const data = Array.isArray(res) ? res : res?.data || [];
-                setNewsList(data);
-            } catch (error) {
-                console.error('Failed to fetch news:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const news = await getAllNews();
 
-        fetchNews();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-zinc-400 gap-2">
-                <Loader2 className="w-6 h-6 animate-spin text-yellow-400" />
-                <span className="text-sm font-medium">Loading news...</span>
-            </div>
-        );
-    }
-
-    if (newsList.length === 0) {
+    if (news.length === 0) {
         return (
             <div className="min-h-screen bg-[#0f0f0f] py-20 text-center text-zinc-500 space-y-3">
                 <Newspaper className="w-12 h-12 mx-auto text-zinc-600" />
@@ -57,8 +29,8 @@ export default function UserNewsPage() {
         );
     }
 
-    const featuredNews = newsList[0];
-    const otherNews = newsList.slice(1);
+    const featuredNews = news[0];
+    const otherNews = news.slice(1);
 
     return (
         <div className="min-h-screen bg-[#0f0f0f] text-white">

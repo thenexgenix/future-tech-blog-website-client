@@ -16,7 +16,6 @@ const formatDate = (dateString) => {
     });
 };
 
-// Dynamic Metadata for SEO
 export async function generateMetadata({ params }) {
     const resolvedParams = await params;
     const newsId = resolvedParams?.id;
@@ -55,8 +54,7 @@ export default async function NewsDetailPage({ params }) {
         }
 
         // Fetch related news on server
-        const allNewsRes = await getAllNews();
-        const allNews = Array.isArray(allNewsRes) ? allNewsRes : allNewsRes?.data || [];
+        const allNews = await getAllNews() || [];
         relatedNews = allNews.filter((item) => item._id !== newsId).slice(0, 3);
 
     } catch (error) {
